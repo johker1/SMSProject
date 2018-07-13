@@ -1,9 +1,21 @@
 let AWS = require('aws-sdk');
+const ddb = new AWS.DynamoDB.DocumentClient();
 const sns = new AWS.SNS();
 exports.handler = function (event, context, callback) {
-	let receiver = event['receiver'];
-	let sender = event['sender'];
-	let message = event['message'];
+	
+	ddb.get({
+		TableName: 'children',
+		Key: { 'id': event['childrenid'] }
+	}, function (err, data) {
+		if (err) {
+			console.log(err)
+		} else {
+			let receiver = data['Item']['phone'];
+			let sender = 'Your Lost Children';
+			let message = 'Ive found your children';
+
+		}
+	});
 
 	console.log("Sending message", message, "to receiver", receiver);
 	sns.publish({
